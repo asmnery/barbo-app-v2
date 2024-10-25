@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Serviços</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/scripts.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Cadastro de Serviços</h2>
+        <form action="/cadastro-servicos" method="POST">
+            <label for="nome_servico">Nome do Serviço:</label>
+            <input type="text" id="nome_servico" name="nome_servico" required>
+
+            <label for="preco">Preço:</label>
+            <input type="text" id="preco" name="preco" required>
+
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao" rows="4" required></textarea>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+</body>
+</html>

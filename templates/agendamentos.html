@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos</title>
+    <link rel="stylesheet" href="../static/styles-agendamento.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Agendar um Serviço</h2>
+        <form method="POST">
+            <label for="cliente">Selecione o Cliente:</label>
+            <select id="cliente" name="cliente">
+                {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="servico">Selecione o Serviço:</label>
+            <select id="servico" name="servico">
+                {% for servico in servicos %}
+                    <option value="{{ servico.id }}">{{ servico.nome_servico }} - R$ {{ servico.preco }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="data">Data do Agendamento:</label>
+            <input type="date" id="data" name="data" required>
+
+            <button type="submit">Agendar</button>
+        </form>
+    </div>
+
+    <div class="container">
+        <h2>Agendamentos Realizados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Serviço</th>
+                    <th>Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for agendamento in agendamentos %}
+                <tr>
+                    <td>{{ agendamento.cliente.nome }}</td>
+                    <td>{{ agendamento.servico.nome_servico }}</td>
+                    <td>{{ agendamento.data.strftime('%d-%m-%Y') }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>    
+    </div>
+</body>
+</html>

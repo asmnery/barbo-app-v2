@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Inicial</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/scripts.js" defer></script>
+</head>
+<body>
+    <nav>
+        <h1>Bem-vindo, {{ username }}!</h1>
+        <a href="/cadastro-clientes">Cadastro de Clientes</a>
+        <a href="/cadastro-servicos">Cadastro de Serviços</a>
+        <a href="/agendamentos">Agendamentos</a>
+        <a href="/logout">Logout</a>
+    </nav>
+
+    <!-- Botão para limpar dados com confirmação -->
+    <section>
+        <form action="{{ url_for('limpar_dados') }}" method="POST" onsubmit="return confirmarLimpeza();">
+            <button type="submit" class="btn btn-danger">Limpar Todos os Dados</button>
+        </form>
+    </section>
+
+    <script>
+        // Função para exibir uma confirmação antes de limpar os dados
+        function confirmarLimpeza() {
+            return confirm('Você tem certeza que deseja excluir todos os clientes, serviços e agendamentos? Esta ação não pode ser desfeita.');
+        }
+    </script>
+</body>
+</html>
