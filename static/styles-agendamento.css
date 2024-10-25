@@ -1,85 +1,98 @@
+/* CSS básico para centralizar e estilizar a página */
+
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 0;
   background-color: #f4f4f4;
-  height: 100vh;
+  margin: 0;
+  padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-}
-
-h1, h2 {
-  color: #333;
+  height: 100vh;
+  background-image: url('./img/GettyImages-1320646994.webp'); /* Caminho da imagem */
+  background-size: cover;           /* Faz a imagem cobrir toda a página */
+  background-position: center;      /* Centraliza a imagem */
+  background-repeat: no-repeat;     /* Evita repetição da imagem */
+  background-attachment: fixed;     /* Mantém a imagem fixa ao rolar a página */
+  color: white
 }
 
 .container {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   width: 100%;
-  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 
-form {
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+.agendamento-form,
+.delete-all-form {
   display: flex;
   flex-direction: column;
+  margin-top: 10px;
 }
 
-form label {
-  font-weight: bold;
+.agendamento-form label,
+.agendamento-form select,
+.agendamento-form input,
+.agendamento-form button {
   margin-bottom: 10px;
 }
 
-form input, form select {
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+table.agendamento-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-form button {
-  padding: 10px 20px;
+table.agendamento-table th,
+table.agendamento-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+table.agendamento-table th {
+  background-color: #f2f2f2;
+}
+
+.btn {
+  padding: 8px 12px;
   background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  align-self: flex-start;
 }
 
-form button:hover {
+.btn:hover {
   background-color: #45a049;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.delete-all-btn {
+  background-color: #f44336;
+  margin-top: 20px;
 }
 
-table thead {
-  background-color: #4CAF50;
-  color: white;
+.delete-all-btn:hover {
+  background-color: #e53935;
 }
 
-table th, table td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.delete-btn {
+  background-color: #f44336;
+  padding: 6px 10px;
 }
 
-table tr:hover {
-  background-color: #f5f5f5;
+.delete-btn:hover {
+  background-color: #e53935;
 }
 
-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+form.delete-form {
+  display: inline;
 }

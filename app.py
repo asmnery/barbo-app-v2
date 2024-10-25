@@ -198,6 +198,25 @@ def limpar_dados():
         return redirect(url_for('menu_inicial'))
     return redirect(url_for('login'))
 
+@app.route('/delete_all_agendamentos', methods=['POST'])
+def delete_all_agendamentos():
+    if 'username' in session:
+        Agendamento.query.delete()  # Remove todos os agendamentos
+        db.session.commit()
+        flash("Todos os agendamentos foram excluídos com sucesso!")
+    return redirect(url_for('agendamentos_view'))
+
+# Rota para excluir um agendamento específico
+@app.route('/delete_agendamento/<int:agendamento_id>', methods=['POST'])
+def delete_agendamento(agendamento_id):
+    if 'username' in session:
+        agendamento = Agendamento.query.get(agendamento_id)
+        if agendamento:
+            db.session.delete(agendamento)
+            db.session.commit()
+            flash("Agendamento excluído com sucesso!")
+    return redirect(url_for('agendamentos_view'))
+
 if __name__ == '__main__':
     # Cria as tabelas no banco de dados SQLite se não existirem
     with app.app_context():

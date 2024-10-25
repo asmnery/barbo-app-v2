@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Barbearia</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <script src="/static/scripts.js" defer></script>
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/styles-login.css">
 </head>
 <body>
-    <div class="container">
+    <div class="login-container">
         <h2>Login</h2>
-        <form id="loginForm" action="/login" method="POST">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="error-message">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+        <form action="{{ url_for('login') }}" method="POST">
             <label for="username">Usuário:</label>
-            <input type="text" id="username" name="username" required>
-
+            <input type="text" id="username" name="username" placeholder="Digite seu usuário" required>
+            
             <label for="password">Senha:</label>
-            <input type="password" id="password" name="password" required>
-
+            <input type="password" id="password" name="password" placeholder="Digite sua senha" required>
+            
             <button type="submit">Entrar</button>
         </form>
-        <p id="error-message"></p>
     </div>
 </body>
 </html>
