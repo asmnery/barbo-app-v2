@@ -1,40 +1,211 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask_sqlalchemy import SQLAlchemy
+import os
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+app.secret_key = 'chave-secreta-super-segura'  # Usada para gerenciar a sessão
+bcrypt = Bcrypt(app)
 
-# Página inicial (Menu)
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Configuração de conexão com o SQLite
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'barbearia.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Página de agendamentos
-@app.route('/agendamentos')
-def agendamentos():
-    return render_template('agendamentos.html')
+# Inicializando o SQLAlchemy
+db = SQLAlchemy(app)
 
-# Página de cadastro de clientes
-@app.route('/cadastro-clientes')
+# Modelo de Usuário
+class Usuario(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+
+# Modelo de Cliente
+class Cliente(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    telefone = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+
+# Modelo de Serviço
+class Servico(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome_servico = db.Column(db.String(100), nullable=False)
+    preco = db.Column(db.String(50), nullable=False)
+
+# Modelo de Agendamento
+class Agendamento(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
+    servico_id = db.Column(db.Integer, db.ForeignKey('servico.id'), nullable=False)
+    data = db.Column(db.DateTime, nullable=False)
+
+    cliente = db.relationship('Cliente', backref=db.backref('agendamentos', lazy=True))
+    servico = db.relationship('Servico', backref=db.backref('agendamentos', lazy=True))
+
+# Rota para a página de login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # Validação de usuário no banco de dados
+        usuario = Usuario.query.filter_by(username=username).first()
+        
+        if usuario and bcrypt.check_password_hash(usuario.password, password):
+            session['username'] = username  # Cria sessão para o usuário
+            return redirect(url_for('menu_inicial'))  # Redireciona para o menu inicial após login
+        else:
+            flash('Usuário ou senha inválidos!')
+
+    return render_template('login.html')
+
+# Rota para o cadastro de usuários e lista
+@app.route('/cadastro-usuario', methods=['GET', 'POST'])
+def cadastro_usuario():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Verifica se o usuário já existe
+        if Usuario.query.filter_by(username=username).first():
+            flash('Usuário já existe!')
+            return redirect(url_for('cadastro_usuario'))
+
+        # Criptografando a senha
+        hashed_password = generate_password_hash(password)
+
+        # Adicionando o novo usuário
+        usuario = Usuario(username=username, password=hashed_password)
+        db.session.add(usuario)
+        db.session.commit()
+        
+        flash('Usuário cadastrado com sucesso!')
+        return redirect(url_for('cadastro_usuario'))
+
+    usuarios = Usuario.query.all()  # Busca todos os usuários para a lista
+    return render_template('cadastro_usuario.html', usuarios=usuarios)
+
+# Rota para remover usuário
+@app.route('/remover-usuario/<int:id>', methods=['POST'])
+def remover_usuario(id):
+    if 'username' in session:
+        usuario = Usuario.query.get(id)
+        if usuario:
+            db.session.delete(usuario)
+            db.session.commit()
+            flash('Usuário removido com sucesso!')
+        else:
+            flash('Usuário não encontrado!')
+
+        return redirect(url_for('cadastro_usuario'))
+    return redirect(url_for('login'))
+
+# Rota para o menu inicial (somente logado)
+@app.route('/menu')
+def menu_inicial():
+    if 'username' in session:
+        return render_template('menu.html', username=session['username'])
+    return redirect(url_for('login'))
+
+# Rota de logout
+@app.route('/logout')
+def logout():
+    session.pop('username', None)  # Remove a sessão
+    return redirect(url_for('login'))
+
+# Rota para o cadastro de clientes
+@app.route('/cadastro-clientes', methods=['GET', 'POST'])
 def cadastro_clientes():
-    return render_template('cadastro_clientes.html')
+    if 'username' in session:
+        if request.method == 'POST':
+            nome = request.form['nome']
+            telefone = request.form['telefone']
+            email = request.form['email']
 
-# Página de cadastro de serviços
-@app.route('/cadastro-servicos')
+            # Adiciona o cliente ao banco de dados SQLite
+            cliente = Cliente(nome=nome, telefone=telefone, email=email)
+            db.session.add(cliente)
+            db.session.commit()
+
+            flash('Cliente cadastrado com sucesso!')
+            return redirect(url_for('cadastro_clientes'))
+
+        return render_template('cadastro_clientes.html')
+    return redirect(url_for('login'))
+
+# Rota para o cadastro de serviços
+@app.route('/cadastro-servicos', methods=['GET', 'POST'])
 def cadastro_servicos():
-    return render_template('cadastro_servicos.html')
+    if 'username' in session:
+        if request.method == 'POST':
+            nome_servico = request.form['nome_servico']
+            preco = request.form['preco']
 
-# Rota para receber cadastro de cliente via POST
-@app.route('/api/cadastro-cliente', methods=['POST'])
-def cadastrar_cliente():
-    dados = request.json
-    # Aqui você salvaria os dados no banco de dados
-    return jsonify({'message': 'Cliente cadastrado com sucesso!'})
+            # Adiciona o serviço ao banco de dados SQLite
+            servico = Servico(nome_servico=nome_servico, preco=preco)
+            db.session.add(servico)
+            db.session.commit()
 
-# Rota para receber cadastro de serviço via POST
-@app.route('/api/cadastro-servico', methods=['POST'])
-def cadastrar_servico():
-    dados = request.json
-    # Aqui você salvaria os dados no banco de dados
-    return jsonify({'message': 'Serviço cadastrado com sucesso!'})
+            flash('Serviço cadastrado com sucesso!')
+            return redirect(url_for('cadastro_servicos'))
+
+        return render_template('cadastro_servicos.html')
+    return redirect(url_for('login'))
+
+# Rota para agendamentos
+@app.route('/agendamentos', methods=['GET', 'POST'])
+def agendamentos_view():
+    if 'username' in session:
+        clientes = Cliente.query.all()  # Busca todos os clientes do banco de dados
+        servicos = Servico.query.all()  # Busca todos os serviços do banco de dados
+        agendamentos = Agendamento.query.all()  # Busca todos os agendamentos do banco
+
+        if request.method == 'POST':
+            cliente_id = request.form['cliente']
+            servico_id = request.form['servico']
+            data = request.form['data']
+            
+            novo_agendamento = Agendamento(cliente_id=cliente_id, servico_id=servico_id, data=datetime.strptime(data, "%Y-%m-%d"))
+            db.session.add(novo_agendamento)
+            db.session.commit()
+
+            flash('Agendamento realizado com sucesso!')
+            return redirect(url_for('agendamentos_view'))
+
+        return render_template('agendamentos.html', clientes=clientes, servicos=servicos, agendamentos=agendamentos)
+    return redirect(url_for('login'))
+
+@app.route('/limpar_dados', methods=['POST'])
+def limpar_dados():
+    if 'username' in session:
+        try:
+            # Exclui todos os registros de agendamentos, clientes e serviços
+            Agendamento.query.delete()
+            Cliente.query.delete()
+            Servico.query.delete()
+            db.session.commit()
+
+            flash('Todos os dados foram removidos com sucesso!')
+        except Exception as e:
+            db.session.rollback()  # Reverte as mudanças em caso de erro
+            flash(f'Ocorreu um erro ao limpar os dados: {str(e)}')
+        
+        return redirect(url_for('menu_inicial'))
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
+    # Cria as tabelas no banco de dados SQLite se não existirem
+    with app.app_context():
+        db.create_all()
+
+        if Usuario.query.count() == 0:
+            usuario_admin = Usuario(username='admin', password=bcrypt.generate_password_hash('admin123').decode('utf-8'))
+            db.session.add(usuario_admin)
+            db.session.commit()
+
     app.run(debug=True)
