@@ -1,0 +1,71 @@
+/* Estilos para a página de login */
+body {
+  background-color: #f4f4f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-image: url('./img/GettyImages-1320646994.webp'); /* Caminho da imagem */
+  background-size: cover;           /* Faz a imagem cobrir toda a página */
+  background-position: center;      /* Centraliza a imagem */
+  background-repeat: no-repeat;     /* Evita repetição da imagem */
+  background-attachment: fixed;     /* Mantém a imagem fixa ao rolar a página */
+  color: white
+}
+
+.login-container {
+  background-color: #ffffff;
+  padding: 1.2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+h2 {
+  font-family: Arial, sans-serif;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+label {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 0.4rem;
+  display: block;
+  text-align: left;
+}
+
+input[type="text"], input[type="password"] {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #5a67d8;
+  color: #fff;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #434190;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
