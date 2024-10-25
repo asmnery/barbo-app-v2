@@ -3,6 +3,12 @@ body {
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
+  background-image: url('./img/GettyImages-1320646994.webp'); /* Caminho da imagem */
+  background-size: cover;           /* Faz a imagem cobrir toda a página */
+  background-position: center;      /* Centraliza a imagem */
+  background-repeat: no-repeat;     /* Evita repetição da imagem */
+  background-attachment: fixed;     /* Mantém a imagem fixa ao rolar a página */
+  color: white
 }
 
 h1, h2 {
@@ -74,4 +80,12 @@ button:hover {
   border: 1px solid #31708f;
   margin-bottom: 20px;
   border-radius: 5px;
+}
+
+.content {
+  background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente para o conteúdo */
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 800px;
+  margin: auto;
 }
