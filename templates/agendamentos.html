@@ -5,64 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agendamentos</title>
     <link rel="stylesheet" href="/static/styles-agendamento.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Agendamentos</h1>
+        <div class="agendamento-container">
+            <h2>Agendamentos</h2>
 
-        <!-- Formulário de criação de agendamento -->
-        <form action="{{ url_for('agendamentos_view') }}" method="POST" class="agendamento-form">
-            <label for="cliente">Cliente:</label>
-            <select name="cliente" required>
-                {% for cliente in clientes %}
-                    <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
-                {% endfor %}
-            </select>
+            <form method="POST" action="/agendamentos" class="agendamento-form">
+                <label for="cliente">Cliente:</label>
+                <select id="cliente" name="cliente" required>
+                    {% for cliente in clientes %}
+                        <option value="{{ cliente.id }}">{{ cliente.nome }}</option>
+                    {% endfor %}
+                </select>
 
-            <label for="servico">Serviço:</label>
-            <select name="servico" required>
-                {% for servico in servicos %}
-                    <option value="{{ servico.id }}">{{ servico.nome_servico }}</option>
-                {% endfor %}
-            </select>
+                <label for="servico">Serviço:</label>
+                <select id="servico" name="servico" required>
+                    {% for servico in servicos %}
+                        <option value="{{ servico.id }}">{{ servico.nome_servico }}</option>
+                    {% endfor %}
+                </select>
 
-            <label for="data">Data:</label>
-            <input type="date" name="data" required>
+                <label for="data">Data do Agendamento:</label>
+                <input type="date" id="data" name="data" required>
 
-            <button type="submit" class="btn">Agendar</button>
-        </form>
+                <label for="hora">Hora do Agendamento:</label>
+                <input type="time" id="hora" name="hora" required>
 
-        <!-- Botão para excluir todos os agendamentos -->
-        <form action="{{ url_for('delete_all_agendamentos') }}" method="POST" class="delete-all-form">
-            <button type="submit" class="btn delete-all-btn">Excluir Todos os Agendamentos</button>
-        </form>
+                <div class="button-container">
+                    <button type="submit" class="agendar-btn">Agendar</button>
+                    <a href="/menu" class="btn voltar-btn">Voltar ao Menu</a>
+                </div>
+            </form>
 
-        <!-- Tabela de agendamentos -->
-        <table class="agendamento-table">
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Serviço</th>
-                    <th>Data</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for agendamento in agendamentos %}
-                <tr>
-                    <td>{{ agendamento.cliente.nome }}</td>
-                    <td>{{ agendamento.servico.nome_servico }}</td>
-                    <td>{{ agendamento.data.strftime('%d-%m-%Y') }}</td>
-                    <td>
-                        <!-- Botão para excluir um agendamento específico -->
-                        <form action="{{ url_for('delete_agendamento', agendamento_id=agendamento.id) }}" method="POST" class="delete-form">
-                            <button type="submit" class="btn delete-btn">Excluir</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <table class="agendamento-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Serviço</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for agendamento in agendamentos %}
+                    <tr>
+                        <td>{{ agendamento.cliente.nome }}</td>
+                        <td>{{ agendamento.servico.nome_servico }}</td>
+                        <td>{{ agendamento.data.strftime('%d-%m-%Y') }}</td>
+                        <td>{{ agendamento.hora.strftime('%H:%M') }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_agendamento', agendamento_id=agendamento.id) }}" method="POST" class="delete-form">
+                                <button type="submit" class="btn delete-btn">Excluir</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>

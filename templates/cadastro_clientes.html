@@ -4,24 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Clientes</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/styles-cadastro-clientes.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <script src="/static/scripts.js" defer></script>
 </head>
 <body>
     <div class="container">
-        <h2>Cadastro de Clientes</h2>
-        <form action="/cadastro-clientes" method="POST">
+        <h1>Cadastro de Clientes</h1>
+        <form method="POST" action="/cadastro-clientes">
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" required>
-            
+
             <label for="telefone">Telefone:</label>
             <input type="text" id="telefone" name="telefone" required>
-            
+
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-            
+
             <button type="submit">Cadastrar</button>
         </form>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
     </div>
 </body>
 </html>
