@@ -1,5 +1,6 @@
 /* Estilos para a página de login */
 body {
+  font-family: Roboto, sans-serif;
   background-color: #f4f4f9;
   display: flex;
   justify-content: center;
@@ -15,7 +16,7 @@ body {
 }
 
 .login-container {
-  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.9);
   padding: 1.2rem;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -25,7 +26,7 @@ body {
 }
 
 h2 {
-  font-family: Arial, sans-serif;
+  font-family: Roboto, sans-serif;
   color: #333;
   margin-bottom: 1rem;
 }

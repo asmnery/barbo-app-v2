@@ -1,7 +1,6 @@
-/* CSS básico para centralizar e estilizar a página */
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 20px;
@@ -14,85 +13,161 @@ body {
   background-position: center;      /* Centraliza a imagem */
   background-repeat: no-repeat;     /* Evita repetição da imagem */
   background-attachment: fixed;     /* Mantém a imagem fixa ao rolar a página */
-  color: white
+  color: #333; /* Cor do texto padrão */
 }
 
 .container {
-  max-width: 600px;
-  width: 100%;
-  background: #fff;
+  max-width: 750px; /* Largura máxima do contêiner */
+  width: 100%; /* Largura total */
+}
+
+.agendamento-container {
+  background: rgba(255, 255, 255, 0.9); /* Fundo semitransparente */
   padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  border-radius: 10px; /* Bordas arredondadas */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Sombra mais suave */
 }
 
-h1 {
-  text-align: center;
-  color: #333;
+/* Estilização dos títulos */
+h2 {
+  text-align: center; /* Centraliza o título */
+  color: #000000; /* Cor verde */
+  margin-bottom: 20px; /* Espaçamento abaixo do título */
 }
 
-.agendamento-form,
-.delete-all-form {
+/* Estilo do formulário */
+.agendamento-form {
   display: flex;
   flex-direction: column;
   margin-top: 10px;
 }
 
-.agendamento-form label,
+.agendamento-form label {
+  margin-bottom: 5px; /* Espaçamento abaixo do label */
+}
+
+/* Estilização dos selects e inputs */
 .agendamento-form select,
-.agendamento-form input,
+.agendamento-form input[type="date"],
+.agendamento-container input[type="time"],
+.agendamento-form input[type="text"] {
+  width: 100%; /* Largura total */
+  padding: 12px; /* Aumenta o padding */
+  margin-bottom: 15px; /* Espaçamento abaixo de cada input */
+  border: 1px solid #ccc; /* Borda cinza */
+  border-radius: 4px; /* Bordas arredondadas */
+  box-sizing: border-box; /* Inclui padding e borda na largura total */
+  transition: border-color 0.3s; /* Transição suave para a borda */
+}
+
+.agendamento-form select:focus,
+.agendamento-form input[type="date"]:focus,
+.agendamento-form input[type="time"]:focus {
+  border-color: #4CAF50; /* Cor da borda ao focar */
+  outline: none; /* Remove contorno padrão */
+}
+
+/* Estilo do botão */
 .agendamento-form button {
-  margin-bottom: 10px;
+  width: 100%; /* Largura total do botão */
+  padding: 12px; /* Aumenta o padding do botão */
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff; /* Cor do texto do botão */
+  background-color: #4CAF50; /* Cor de fundo do botão */
+  border: none; /* Remove borda */
+  border-radius: 4px; /* Bordas arredondadas */
+  cursor: pointer; /* Cursor de ponteiro */
+  transition: background-color 0.3s, transform 0.3s; /* Transição suave */
 }
 
-table.agendamento-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+.agendamento-form button:hover {
+  background-color: #45a049; /* Cor do botão ao passar o mouse */
+  transform: translateY(-2px); /* Leve elevação ao passar o mouse */
 }
 
-table.agendamento-table th,
-table.agendamento-table td {
-  padding: 8px;
-  border: 1px solid #ddd;
-  text-align: center;
+/* Estilo para a tabela de agendamentos */
+.agendamento-table {
+  width: 100%; /* Largura total da tabela */
+  border-collapse: collapse; /* Colapsa bordas */
+  margin-top: 20px; /* Espaço acima da tabela */
 }
 
-table.agendamento-table th {
-  background-color: #f2f2f2;
+.agendamento-table th,
+.agendamento-table td {
+  padding: 12px; /* Aumenta o padding nas células */
+  border: 1px solid #ddd; /* Borda das células */
+  text-align: center; /* Centraliza o texto */
+  transition: background-color 0.3s; /* Transição suave para o fundo */
 }
 
-.btn {
-  padding: 8px 12px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.agendamento-table th {
+  background-color: #855f00; /* Cor de fundo dos cabeçalhos */
+  color: white; /* Cor do texto dos cabeçalhos */
+  font-weight: bold; /* Negrito para os cabeçalhos */
 }
 
-.btn:hover {
-  background-color: #45a049;
+.agendamento-table td {
+  background-color: #f9f9f9; /* Cor de fundo das células */
 }
 
-.delete-all-btn {
-  background-color: #f44336;
-  margin-top: 20px;
+.agendamento-table tr:hover td {
+  background-color: #eaeaea; /* Cor de fundo ao passar o mouse sobre a linha */
 }
 
-.delete-all-btn:hover {
-  background-color: #e53935;
-}
-
+/* Estilo para os botões de exclusão */
 .delete-btn {
-  background-color: #f44336;
-  padding: 6px 10px;
+  color:#f9f9f9;
+  background-color: #f44336; /* Cor do botão de exclusão */
+  padding: 6px 10px; /* Espaçamento interno */
+  border: none; /* Remove borda */
+  border-radius: 4px; /* Bordas arredondadas */
+  cursor: pointer; /* Cursor de ponteiro */
+  transition: background-color 0.3s, transform 0.3s; /* Transição suave */
 }
 
 .delete-btn:hover {
-  background-color: #e53935;
+  background-color: #e53935; /* Cor do botão de exclusão ao passar o mouse */
+  transform: translateY(-2px); /* Leve elevação ao passar o mouse */
 }
 
-form.delete-form {
-  display: inline;
+.button-container {
+  display: flex;
+  justify-content: space-between; /* Para espaçar os botões */
+  margin-top: 15px; /* Espaçamento acima dos botões */
+}
+
+.agendar-btn,
+.voltar-btn {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #4CAF50; /* Cor de fundo para Agendar */
+  color: white; /* Cor do texto */
+  border: none; /* Sem borda */
+  border-radius: 5px; /* Bordas arredondadas */
+  cursor: pointer; /* Muda o cursor ao passar o mouse */
+  text-decoration: none; /* Remove o sublinhado do link */
+}
+
+.agendar-btn:hover {
+  background-color: #45a049; /* Cor de fundo ao passar o mouse para Agendar */
+  
+}
+
+.voltar-btn {
+  background-color: #007BFF; /* Cor de fundo para Voltar ao Menu */ 
+  width: 100%; /* Largura total do botão */
+  padding: 12px; /* Aumenta o padding do botão */
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff; /* Cor do texto do botão */
+  border: none; /* Remove borda */
+  border-radius: 4px; /* Bordas arredondadas */
+  cursor: pointer; /* Cursor de ponteiro */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.voltar-btn:hover {
+  background-color: #116cce; /* Cor do botão ao passar o mouse */
+  transform: translateY(-2px); /* Leve elevação ao passar o mouse */
 }

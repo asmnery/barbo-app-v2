@@ -1,28 +1,28 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: Roboto, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
-  background-image: url('./img/GettyImages-1320646994.webp'); /* Caminho da imagem */
-  background-size: cover;           /* Faz a imagem cobrir toda a página */
-  background-position: center;      /* Centraliza a imagem */
-  background-repeat: no-repeat;     /* Evita repetição da imagem */
-  background-attachment: fixed;     /* Mantém a imagem fixa ao rolar a página */
+  background-image: url('./img/GettyImages-1320646994.webp'); 
+  background-size: cover;           
+  background-position: center;      
+  background-repeat: no-repeat;     
+  background-attachment: fixed;     
   color: white
 }
 
 h1, h2 {
-  color: #333;
+  color: #FFDEAD;
 }
 
 nav {
-  background-color: #6864da;
+  background-color: #6e521a;
   padding: 10px;
   text-align: center;
 }
 
 nav a {
-  color: white;
+  color: #fce7c2;
   margin: 0 15px;
   text-decoration: none;
   font-weight: bold;

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
-from datetime import datetime
+from datetime import datetime, time
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 
@@ -41,7 +41,8 @@ class Agendamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
     servico_id = db.Column(db.Integer, db.ForeignKey('servico.id'), nullable=False)
-    data = db.Column(db.DateTime, nullable=False)
+    data = db.Column(db.Date, nullable=False)  # Já existente para a data
+    hora = db.Column(db.Time, nullable=False)   # Novo campo para o horário do agendamento
 
     cliente = db.relationship('Cliente', backref=db.backref('agendamentos', lazy=True))
     servico = db.relationship('Servico', backref=db.backref('agendamentos', lazy=True))
@@ -161,22 +162,23 @@ def cadastro_servicos():
 @app.route('/agendamentos', methods=['GET', 'POST'])
 def agendamentos_view():
     if 'username' in session:
-        clientes = Cliente.query.all()  # Busca todos os clientes do banco de dados
-        servicos = Servico.query.all()  # Busca todos os serviços do banco de dados
-        agendamentos = Agendamento.query.all()  # Busca todos os agendamentos do banco
+        clientes = Cliente.query.all()
+        servicos = Servico.query.all()
 
         if request.method == 'POST':
             cliente_id = request.form['cliente']
             servico_id = request.form['servico']
-            data = request.form['data']
-            
-            novo_agendamento = Agendamento(cliente_id=cliente_id, servico_id=servico_id, data=datetime.strptime(data, "%Y-%m-%d"))
-            db.session.add(novo_agendamento)
+            data = datetime.strptime(request.form['data'], '%Y-%m-%d').date()
+            hora = datetime.strptime(request.form['hora'], '%H:%M').time()  # Conversão da hora
+
+            # Cria e salva o novo agendamento com data e hora
+            agendamento = Agendamento(cliente_id=cliente_id, servico_id=servico_id, data=data, hora=hora)
+            db.session.add(agendamento)
             db.session.commit()
 
-            flash('Agendamento realizado com sucesso!')
             return redirect(url_for('agendamentos_view'))
 
+        agendamentos = Agendamento.query.all()
         return render_template('agendamentos.html', clientes=clientes, servicos=servicos, agendamentos=agendamentos)
     return redirect(url_for('login'))
 
