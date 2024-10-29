@@ -8,15 +8,19 @@
     <script src="/static/scripts.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav>
-        <h1>Bem-vindo, {{ username }}!</h1>
-        <a href="/cadastro-clientes">Cadastro de Clientes</a>
-        <a href="/cadastro-servicos">Cadastro de Serviços</a>
-        <a href="/agendamentos">Agendamentos</a>
-        <a href="/logout">Logout</a>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <h1>Bem-vindo, {{ username }}!</h1>
+        </div>
+        <ul class="navbar-menu">
+            <li><a href="/cadastro-clientes">Cadastro de Clientes</a></li>
+            <li><a href="/cadastro-servicos">Cadastro de Serviços</a></li>
+            <li><a href="/agendamentos">Agendamentos</a></li>
+            <li><a href="/logout" class="navbar-logout">Logout</a></li>
+        </ul>
     </nav>
 </body>
 </html>
