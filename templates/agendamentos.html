@@ -40,12 +40,12 @@
                     <a href="/menu" class="btn voltar-btn">Voltar ao Menu</a>
                 </div>
             </form>
-
             <table class="agendamento-table">
                 <thead>
                     <tr>
                         <th>Cliente</th>
                         <th>Serviço</th>
+                        <th>Preço</th> <!-- Coluna para o preço -->
                         <th>Data</th>
                         <th>Hora</th>
                         <th>Ações</th>
@@ -54,8 +54,9 @@
                 <tbody>
                     {% for agendamento in agendamentos %}
                     <tr>
-                        <td>{{ agendamento.cliente.nome }}</td>
-                        <td>{{ agendamento.servico.nome_servico }}</td>
+                        <td>{{ agendamento.cliente_nome }}</td>
+                        <td>{{ agendamento.nome_servico }}</td>
+                        <td>R$ {{ agendamento.preco }}</td> <!-- Exibe o preço do serviço -->
                         <td>{{ agendamento.data.strftime('%d-%m-%Y') }}</td>
                         <td>{{ agendamento.hora.strftime('%H:%M') }}</td>
                         <td>

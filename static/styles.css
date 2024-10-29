@@ -1,91 +1,80 @@
-body {
-  font-family: Roboto, sans-serif;
-  background-color: #f4f4f4;
+/* Resetando margem e preenchimento */
+* {
   margin: 0;
   padding: 0;
-  background-image: url('./img/GettyImages-1320646994.webp'); 
-  background-size: cover;           
-  background-position: center;      
-  background-repeat: no-repeat;     
-  background-attachment: fixed;     
-  color: white
+  box-sizing: border-box;
 }
 
-h1, h2 {
-  color: #FFDEAD;
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-image: url('./img/GettyImages-1320646994.webp'); /* Adicione sua imagem de fundo */
+  background-size: cover;
+  background-position: center;
 }
 
-nav {
-  background-color: #6e521a;
-  padding: 10px;
-  text-align: center;
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #6e521a; /* Cor de fundo da navbar */
+  color: #fff;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 0; /* Sem borda arredondada */
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 
-nav a {
-  color: #fce7c2;
-  margin: 0 15px;
-  text-decoration: none;
+.navbar-brand h1 {
+  font-size: 1.5rem;
   font-weight: bold;
+  color: #fff;
 }
 
-nav a:hover {
-  text-decoration: underline;
+/* Links do menu */
+.navbar-menu {
+  display: flex;
+  list-style: none;
 }
 
+.navbar-menu li {
+  margin-left: 20px;
+}
+
+.navbar-menu a {
+  text-decoration: none;
+  color: #fff;
+  font-weight: 500;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.navbar-menu a:hover {
+  background-color: #ffcc00;
+  color: #333;
+}
+
+/* Botão de Logout */
+.navbar-logout {
+  background-color: #f44336;
+  padding: 8px 15px;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.navbar-logout:hover {
+  background-color: #e53935;
+  transform: translateY(-2px);
+}
+
+/* Ajustando o conteúdo para começar abaixo da navbar */
 .container {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-label {
-  display: block;
-  margin: 10px 0 5px;
-}
-
-input[type="text"], input[type="email"], input[type="password"], input[type="date"], select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-#error-message {
-  color: red;
-  text-align: center;
-}
-
-.flash {
-  background-color: #e7f3fe;
-  color: #31708f;
-  padding: 10px;
-  border: 1px solid #31708f;
-  margin-bottom: 20px;
-  border-radius: 5px;
-}
-
-.content {
-  background-color: rgba(0, 0, 0, 0.5); /* Fundo semitransparente para o conteúdo */
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 800px;
-  margin: auto;
+  padding-top: 80px; /* Espaço para evitar sobreposição da navbar */
 }

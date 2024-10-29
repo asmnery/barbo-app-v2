@@ -158,7 +158,6 @@ def cadastro_servicos():
         return render_template('cadastro_servicos.html')
     return redirect(url_for('login'))
 
-# Rota para agendamentos
 @app.route('/agendamentos', methods=['GET', 'POST'])
 def agendamentos_view():
     if 'username' in session:
@@ -169,7 +168,7 @@ def agendamentos_view():
             cliente_id = request.form['cliente']
             servico_id = request.form['servico']
             data = datetime.strptime(request.form['data'], '%Y-%m-%d').date()
-            hora = datetime.strptime(request.form['hora'], '%H:%M').time()  # Conversão da hora
+            hora = datetime.strptime(request.form['hora'], '%H:%M').time()
 
             # Cria e salva o novo agendamento com data e hora
             agendamento = Agendamento(cliente_id=cliente_id, servico_id=servico_id, data=data, hora=hora)
@@ -178,8 +177,24 @@ def agendamentos_view():
 
             return redirect(url_for('agendamentos_view'))
 
-        agendamentos = Agendamento.query.all()
-        return render_template('agendamentos.html', clientes=clientes, servicos=servicos, agendamentos=agendamentos)
+        # Busca todos os agendamentos com os detalhes do cliente e serviço, incluindo o preço
+        agendamentos = db.session.query(
+            Agendamento.id,
+            Cliente.nome.label('cliente_nome'),
+            Servico.nome_servico,
+            Servico.preco,
+            Agendamento.data,
+            Agendamento.hora
+        ).join(Cliente, Agendamento.cliente_id == Cliente.id)\
+         .join(Servico, Agendamento.servico_id == Servico.id)\
+         .all()
+
+        return render_template(
+            'agendamentos.html',
+            clientes=clientes,
+            servicos=servicos,
+            agendamentos=agendamentos
+        )
     return redirect(url_for('login'))
 
 @app.route('/limpar_dados', methods=['POST'])
