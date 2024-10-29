@@ -1,6 +1,6 @@
 body {
   font-family: Roboto, sans-serif;
-  background-image: url('./img/GettyImages-1320646994.webp'); /* Adicione sua imagem de fundo */
+  background-image: url('../static/img/GettyImages-1320646994.webp');
   background-size: cover;
   background-position: center;
   margin: 0;
@@ -10,7 +10,7 @@ body {
   max-width: 400px;
   margin: 100px auto;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.9); /* Fundo semitransparente */
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -36,27 +36,49 @@ input {
 }
 
 input:focus {
-  border-color: #007bff; 
+  border-color: #007bff;
   outline: none;
 }
 
-button {
-  width: 100%;
+/* Estilização dos botões */
+.button-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+button.btn, a.btn {
+  flex: 1;
   padding: 10px;
-  background-color: #007bff;
   border: none;
   border-radius: 5px;
   color: white;
   font-size: 16px;
+  text-align: center;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
+  text-decoration: none;
 }
 
-button:hover {
-  background-color: #0056b3; /* Cor do botão ao passar o mouse */
+.cadastrar-btn {
+  background-color: #4CAF50; /* Azul para o botão de cadastrar */
+}
+
+.voltar-btn {
+  background-color: #007BFF; /* Cinza para o botão de voltar */
+}
+
+button.btn:hover {
+  background-color: #38803b;
   transform: translateY(-2px);
 }
 
+a.btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Estilização do alerta */
 .alert {
   margin-top: 20px;
   padding: 10px;

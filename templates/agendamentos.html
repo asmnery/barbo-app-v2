@@ -45,7 +45,7 @@
                     <tr>
                         <th>Cliente</th>
                         <th>Serviço</th>
-                        <th>Preço</th> <!-- Coluna para o preço -->
+                        <th>Preço</th>
                         <th>Data</th>
                         <th>Hora</th>
                         <th>Ações</th>
@@ -56,7 +56,7 @@
                     <tr>
                         <td>{{ agendamento.cliente_nome }}</td>
                         <td>{{ agendamento.nome_servico }}</td>
-                        <td>R$ {{ agendamento.preco }}</td> <!-- Exibe o preço do serviço -->
+                        <td>R$ {{ agendamento.preco }}</td>
                         <td>{{ agendamento.data.strftime('%d-%m-%Y') }}</td>
                         <td>{{ agendamento.hora.strftime('%H:%M') }}</td>
                         <td>
