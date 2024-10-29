@@ -20,7 +20,10 @@
             <label for="preco">Preço:</label>
             <input type="text" id="preco" name="preco" required>
 
-            <button type="submit">Cadastrar</button>
+            <div class="button-container">
+                <button type="submit" class="btn cadastrar-btn">Cadastrar</button>
+                <a href="/menu" class="btn voltar-btn">Voltar ao Menu</a>
+            </div>
         </form>
         {% with messages = get_flashed_messages() %}
             {% if messages %}

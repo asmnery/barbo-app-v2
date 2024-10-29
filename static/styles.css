@@ -1,4 +1,3 @@
-/* Resetando margem e preenchimento */
 * {
   margin: 0;
   padding: 0;
@@ -10,22 +9,21 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background-image: url('./img/GettyImages-1320646994.webp'); /* Adicione sua imagem de fundo */
+  background-image: url('./img/GettyImages-1320646994.webp');
   background-size: cover;
   background-position: center;
 }
 
-/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px 30px;
-  background-color: #6e521a; /* Cor de fundo da navbar */
+  background-color: #6e521a;
   color: #fff;
   width: 100%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 0; /* Sem borda arredondada */
+  border-radius: 0;
   position: fixed;
   top: 0;
   left: 0;
@@ -37,7 +35,6 @@ body {
   color: #fff;
 }
 
-/* Links do menu */
 .navbar-menu {
   display: flex;
   list-style: none;
@@ -61,7 +58,6 @@ body {
   color: #333;
 }
 
-/* Botão de Logout */
 .navbar-logout {
   background-color: #f44336;
   padding: 8px 15px;
@@ -74,7 +70,6 @@ body {
   transform: translateY(-2px);
 }
 
-/* Ajustando o conteúdo para começar abaixo da navbar */
 .container {
-  padding-top: 80px; /* Espaço para evitar sobreposição da navbar */
+  padding-top: 80px;
 }
