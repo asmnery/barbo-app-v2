@@ -10,7 +10,7 @@ app.secret_key = 'secret-key-alberthzin'
 bcrypt = Bcrypt(app)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'barbearia.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost/barbo_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
