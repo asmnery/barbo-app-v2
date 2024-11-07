@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash
 from flask_bcrypt import Bcrypt
+from twilio.rest import Client
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 app.secret_key = 'secret-key-alberthzin'
@@ -13,37 +15,73 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost/barbo_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+# Configurações da conta Twilio
+ACCOUNT_SID = "AC58da603dfd219cad57a785a5bc3e1dae"
+AUTH_TOKEN = "90fab39bc27df2bfa3343c98ed2280de"
+TWILIO_PHONE_NUMBER = "+12512195143"
 
-# model usuario 
+db = SQLAlchemy(app)
+scheduler = BackgroundScheduler()
+
+# Modelos de Banco de Dados
 class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
 
-# model cliente
 class Cliente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     telefone = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
 
-# model serviço
 class Servico(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome_servico = db.Column(db.String(100), nullable=False)
-    preco = db.Column(db.String(50), nullable=False)
+    preco = db.Column(db.Float, nullable=False)
 
-# modelo agendamento
 class Agendamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cliente_id = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
     servico_id = db.Column(db.Integer, db.ForeignKey('servico.id'), nullable=False)
     data = db.Column(db.Date, nullable=False)
     hora = db.Column(db.Time, nullable=False)
+    notificado = db.Column(db.Boolean, default=False)
 
     cliente = db.relationship('Cliente', backref=db.backref('agendamentos', lazy=True))
     servico = db.relationship('Servico', backref=db.backref('agendamentos', lazy=True))
+
+# Função para enviar SMS via Twilio
+def enviar_sms(to_number, mensagem):
+    client = Client(ACCOUNT_SID, AUTH_TOKEN)
+    client.messages.create(
+        body=mensagem,
+        from_=TWILIO_PHONE_NUMBER,
+        to=to_number
+    )
+    print(f"SMS enviado para {to_number}")
+
+# Função para verificar e enviar notificações
+def verificar_agendamentos():
+    with app.app_context():  # Garante o contexto da aplicação
+        agora = datetime.now()
+        agendamentos = Agendamento.query.filter(
+            Agendamento.data == agora.date(),
+            Agendamento.hora <= (agora + timedelta(minutes=5)).time()
+        ).all()
+
+        for agendamento in agendamentos:
+            cliente = agendamento.cliente
+            servico = agendamento.servico
+
+            # Monta a mensagem de notificação
+            mensagem = f"Olá {cliente.nome}, lembrete: você tem um {servico.nome_servico} agendado para hoje às {agendamento.hora}."
+
+            # Envia o SMS
+            enviar_sms(cliente.telefone, mensagem)
+
+            # Marca como notificado para evitar notificações duplicadas
+            agendamento.notificado = True
+            db.session.commit()
 
 # rota login
 @app.route('/login', methods=['GET', 'POST'])
@@ -52,9 +90,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-
         usuario = Usuario.query.filter_by(username=username).first()
-        
+
         if usuario and bcrypt.check_password_hash(usuario.password, password):
             session['username'] = username
             return redirect(url_for('menu_inicial'))
@@ -69,17 +106,16 @@ def cadastro_usuario():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
+
         if Usuario.query.filter_by(username=username).first():
             flash('Usuário já existe!')
             return redirect(url_for('cadastro_usuario'))
 
         hashed_password = generate_password_hash(password)
-
         usuario = Usuario(username=username, password=hashed_password)
         db.session.add(usuario)
         db.session.commit()
-        
+
         flash('Usuário cadastrado com sucesso!')
         return redirect(url_for('cadastro_usuario'))
 
@@ -101,7 +137,7 @@ def remover_usuario(id):
         return redirect(url_for('cadastro_usuario'))
     return redirect(url_for('login'))
 
-# rota menu inicial (somente logado)
+# Rota para o menu inicial (somente logado)
 @app.route('/menu')
 def menu_inicial():
     if 'username' in session:
@@ -153,7 +189,7 @@ def cadastro_servicos():
         return render_template('cadastro_servicos.html')
     return redirect(url_for('login'))
 
-#rota cadastro agendamentos
+# rota cadastro agendamentos
 @app.route('/agendamentos', methods=['GET', 'POST'])
 def agendamentos_view():
     if 'username' in session:
@@ -201,15 +237,18 @@ def delete_agendamento(agendamento_id):
         if agendamento:
             db.session.delete(agendamento)
             db.session.commit()
+            flash('Agendamento removido com sucesso!')
     return redirect(url_for('agendamentos_view'))
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-        if Usuario.query.count() == 0:
-            usuario_admin = Usuario(username='admin', password=bcrypt.generate_password_hash('admin123').decode('utf-8'))
-            db.session.add(usuario_admin)
-            db.session.commit()
+    # Inicia o scheduler e configura a verificação de agendamentos a cada minuto
+    scheduler.add_job(verificar_agendamentos, 'interval', minutes=1)
+    scheduler.start()
 
-    app.run(debug=True)
+    try:
+        app.run(debug=True)
+    finally:
+        scheduler.shutdown()
