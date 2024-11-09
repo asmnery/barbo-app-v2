@@ -16,9 +16,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:admin@localhost/barbo_db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Configurações da conta Twilio
-ACCOUNT_SID = " "
-AUTH_TOKEN = " "
-TWILIO_PHONE_NUMBER = " "
+ACCOUNT_SID = "*****"
+AUTH_TOKEN = "*****"
+TWILIO_PHONE_NUMBER = "*****"
 
 db = SQLAlchemy(app)
 scheduler = BackgroundScheduler()
