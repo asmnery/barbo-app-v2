@@ -237,7 +237,6 @@ def delete_agendamento(agendamento_id):
         if agendamento:
             db.session.delete(agendamento)
             db.session.commit()
-            flash('Agendamento removido com sucesso!')
     return redirect(url_for('agendamentos_view'))
 
 if __name__ == '__main__':
