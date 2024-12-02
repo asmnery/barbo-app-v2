@@ -3,47 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastrar Usuário</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Cadastro de Usuários</title>
+    <link rel="stylesheet" href="/static/styles-cadastro-servicos.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <script src="/static/scripts.js" defer></script>
 </head>
 <body>
-    <h1>Cadastrar Novo Usuário</h1>
-    <form method="POST">
-        <label for="username">Nome de Usuário:</label>
-        <input type="text" id="username" name="username" required>
+    <div class="container">
+        <h1>Cadastro de Usuários</h1>
+        <form method="POST" action="{{ url_for('cadastro_usuario') }}">
+            <label for="username">Nome de Usuário:</label>
+            <input type="text" id="username" name="username" required><br>
+            
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required><br>
+                      
+            <div class="button-container">
+                <button type="submit" class="btn cadastrar-btn">Cadastrar</button>
+                <a href="/menu" class="btn voltar-btn">Voltar ao Menu</a>
+            </div>
+        </form>
         
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required>
-        
-        <button type="submit">Cadastrar</button>
-    </form>
-
-    <h2>Lista de Usuários</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome de Usuário</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for usuario in usuarios %}
-            <tr>
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.username }}</td>
-                <td>
-                    <form action="{{ url_for('remover_usuario', id=usuario.id) }}" method="POST" style="display:inline;">
-                        <button type="submit">Remover</button>
-                    </form>
-                </td>
-            </tr>
+        <h3>Usuários Cadastrados:</h3>
+        <ul>
+            {% for user in usuarios %}
+                <li>{{ user.username }}</li>
             {% endfor %}
-        </tbody>
-    </table>
-    <a href="/menu">Voltar ao Menu Inicial</a>
+        </ul>
+    
+    </div>
 </body>
 </html>

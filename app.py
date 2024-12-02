@@ -28,6 +28,12 @@ class Usuario(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    role = db.Column(db.String(50), nullable=False, default='usuario')
+
+    def __init__(self, username, password, role='usuario'):
+        self.username = username
+        self.password = password
+        self.role = role
 
 class Cliente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,7 +56,7 @@ class Agendamento(db.Model):
     cliente = db.relationship('Cliente', backref=db.backref('agendamentos', lazy=True))
     servico = db.relationship('Servico', backref=db.backref('agendamentos', lazy=True))
 
-# Função para enviar SMS via Twilio
+# função para enviar SMS via Twilio
 def enviar_sms(to_number, mensagem):
     client = Client(ACCOUNT_SID, AUTH_TOKEN)
     client.messages.create(
@@ -60,9 +66,9 @@ def enviar_sms(to_number, mensagem):
     )
     print(f"SMS enviado para {to_number}")
 
-# Função para verificar e enviar notificações
+# função para verificar e enviar notificações
 def verificar_agendamentos():
-    with app.app_context():  # Garante o contexto da aplicação
+    with app.app_context():
         agora = datetime.now()
         agendamentos = Agendamento.query.filter(
             Agendamento.data == agora.date(),
@@ -73,13 +79,13 @@ def verificar_agendamentos():
             cliente = agendamento.cliente
             servico = agendamento.servico
 
-            # Monta a mensagem de notificação
+            # monta a mensagem de notificação
             mensagem = f"Olá {cliente.nome}, lembrete: você tem um {servico.nome_servico} agendado para hoje às {agendamento.hora}."
 
-            # Envia o SMS
+            # envia o SMS
             enviar_sms(cliente.telefone, mensagem)
 
-            # Marca como notificado para evitar notificações duplicadas
+            # marca como notificado para evitar notificações duplicadas
             agendamento.notificado = True
             db.session.commit()
 
@@ -94,60 +100,54 @@ def login():
 
         if usuario and bcrypt.check_password_hash(usuario.password, password):
             session['username'] = username
+            session['role'] = usuario.role
             return redirect(url_for('menu_inicial'))
         else:
             flash('Usuário ou senha inválidos!')
 
     return render_template('login.html')
 
-# rota cadastro de usuários e lista
-@app.route('/cadastro-usuario', methods=['GET', 'POST'])
+#cadastrar usuarios
+@app.route('/cadastro-usuarios', methods=['GET', 'POST'])
 def cadastro_usuario():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+    if 'username' in session and 'role' in session and session['role'] == 'ADMIN':  # verifica se é admin
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
 
-        if Usuario.query.filter_by(username=username).first():
-            flash('Usuário já existe!')
+            if Usuario.query.filter_by(username=username).first():
+                flash('Usuário já existe!')
+                return redirect(url_for('cadastro_usuario'))
+
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            usuario = Usuario(username=username, password=hashed_password, role='barbeiro')  # definindo o papel
+
+            db.session.add(usuario)
+            db.session.commit()
+
             return redirect(url_for('cadastro_usuario'))
 
-        hashed_password = generate_password_hash(password)
-        usuario = Usuario(username=username, password=hashed_password)
-        db.session.add(usuario)
-        db.session.commit()
-
-        flash('Usuário cadastrado com sucesso!')
-        return redirect(url_for('cadastro_usuario'))
-
-    usuarios = Usuario.query.all()
-    return render_template('cadastro_usuario.html', usuarios=usuarios)
-
-# rota remover usuario
-@app.route('/remover-usuario/<int:id>', methods=['POST'])
-def remover_usuario(id):
-    if 'username' in session:
-        usuario = Usuario.query.get(id)
-        if usuario:
-            db.session.delete(usuario)
-            db.session.commit()
-            flash('Usuário removido com sucesso!')
-        else:
-            flash('Usuário não encontrado!')
-
-        return redirect(url_for('cadastro_usuario'))
+        usuarios = Usuario.query.all()
+        return render_template('cadastro_usuarios.html', usuarios=usuarios)    
     return redirect(url_for('login'))
 
-# Rota para o menu inicial (somente logado)
+
+# rota para o menu inicial (somente logado)
 @app.route('/menu')
 def menu_inicial():
     if 'username' in session:
-        return render_template('menu.html', username=session['username'])
+        usuario = Usuario.query.filter_by(username=session['username']).first()
+        if usuario:
+            return render_template('menu.html', username=session['username'], role=usuario.role)
     return redirect(url_for('login'))
 
-# rota logout
+
+
+# rota para logout
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('role', None)  # remove o papel do usuário
     return redirect(url_for('login'))
 
 # rota cadastro clientes
@@ -244,7 +244,6 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
 
-    # Inicia o scheduler e configura a verificação de agendamentos a cada minuto
     scheduler.add_job(verificar_agendamentos, 'interval', minutes=1)
     scheduler.start()
 

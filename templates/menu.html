@@ -16,9 +16,15 @@
             <h1>Bem-vindo, {{ username }}!</h1>
         </div>
         <ul class="navbar-menu">
-            <li><a href="/cadastro-clientes">Cadastro de Clientes</a></li>
-            <li><a href="/cadastro-servicos">Cadastro de Serviços</a></li>
-            <li><a href="/agendamentos">Agendamentos</a></li>
+            <li><a href="{{ url_for('cadastro_clientes') }}">Cadastrar Cliente</a></li>
+            <li><a href="{{ url_for('cadastro_servicos') }}">Cadastrar Serviço</a></li>
+            <li><a href="{{ url_for('agendamentos_view') }}">Agendamentos</a></li>
+
+            <!-- Exibe a opção de cadastrar usuário apenas se a role for 'ADMIN' -->
+            {% if role == 'ADMIN' %}
+                <li><a href="{{ url_for('cadastro_usuario') }}">Cadastrar Usuário</a></li>
+            {% endif %}
+            
             <li><a href="/logout" class="navbar-logout">Logout</a></li>
         </ul>
     </nav>
